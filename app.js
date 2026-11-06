@@ -2,56 +2,59 @@
 const chatForm = document.getElementById("chatForm");
 const userInput = document.getElementById("userInput");
 const messages = document.getElementById("messages");
-const welcome = document.getElementById("welcome");
-const newChat = document.getElementById("newChat");
+const sendButton = document.getElementById("sendButton");
+const newChatButton = document.getElementById("newChatButton");
 
 function addMessage(text, sender) {
-    const message = document.createElement("div");
-
-    message.classList.add("message", sender);
-    message.textContent = text;
-
-    messages.appendChild(message);
-
-    return message;
+  const message = document.createElement("div");
+  message.className = `message ${sender}`;
+  message.textContent = text;
+  messages.appendChild(message);
+  messages.scrollTop = messages.scrollHeight;
 }
 
-chatForm.addEventListener("submit", function(event) {
-    event.preventDefault();
+chatForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
 
-    const text = userInput.value.trim();
+  const message = userInput.value.trim();
+  if (!message) return;
 
-    if (!text) return;
+  addMessage(message, "user");
+  userInput.value = "";
+  sendButton.disabled = true;
 
-    welcome.style.display = "none";
+  const loading = document.createElement("div");
+  loading.className = "message assistant";
+  loading.textContent = "Astra sedang berpikir...";
+  messages.appendChild(loading);
 
-    addMessage(text, "user");
+  try {
+    const response = await fetch("/.netlify/functions/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ message })
+    });
 
-    userInput.value = "";
-    userInput.style.height = "auto";
+    const data = await response.json();
+    loading.remove();
 
-    addMessage(
-        "Astra belum terhubung ke layanan AI. Integrasi AI akan dipasang pada tahap berikutnya.",
-        "assistant"
-    );
-});
-
-userInput.addEventListener("keydown", function(event) {
-    if (event.key === "Enter" && !event.shiftKey) {
-        event.preventDefault();
-        chatForm.requestSubmit();
+    if (!response.ok) {
+      throw new Error(data.error || "Terjadi kesalahan.");
     }
-});
 
-userInput.addEventListener("input", function() {
-    this.style.height = "auto";
-    this.style.height = Math.min(this.scrollHeight, 150) + "px";
-});
-
-newChat.addEventListener("click", function() {
-    messages.innerHTML = "";
-    welcome.style.display = "block";
-    userInput.value = "";
-    userInput.style.height = "auto";
+    addMessage(data.reply, "assistant");
+  } catch (error) {
+    loading.remove();
+    addMessage("Astra: " + error.message, "assistant");
+  } finally {
+    sendButton.disabled = false;
     userInput.focus();
+  }
+});
+
+newChatButton.addEventListener("click", () => {
+  messages.innerHTML = "";
+  userInput.value = "";
 });
