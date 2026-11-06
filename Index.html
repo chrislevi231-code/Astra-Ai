@@ -1,0 +1,54 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>Astra — AI Assistant</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="topbar">
+        <div class="brand">Astra</div>
+        <button id="newChat">New chat</button>
+    </header>
+
+    <main class="chat-container">
+
+        <section class="welcome" id="welcome">
+            <h1>What can I help with?</h1>
+            <p>Ask anything. Astra is here to help.</p>
+        </section>
+
+        <section class="messages" id="messages">
+        </section>
+
+        <form class="chat-form" id="chatForm">
+
+            <textarea
+                id="userInput"
+                placeholder="Message Astra..."
+                rows="1"
+                required
+            ></textarea>
+
+            <button type="submit" id="sendButton">
+                Send
+            </button>
+
+        </form>
+
+        <footer>
+            Astra can make mistakes. Check important information.
+        </footer>
+
+    </main>
+
+    <script src="app.js"></script>
+
+</body>
+</html>
