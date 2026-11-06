@@ -17,28 +17,33 @@ export default async (req) => {
       );
     }
 
-    const apiKey = Netlify.env.get("OPENAI_API_KEY");
+    const apiKey = Netlify.env.get("GEMINI_API_KEY");
 
     if (!apiKey) {
       return new Response(
-        JSON.stringify({ error: "API key belum dikonfigurasi." }),
+        JSON.stringify({ error: "Gemini API key belum dikonfigurasi." }),
         { status: 500 }
       );
     }
 
     const response = await fetch(
-      "https://api.openai.com/v1/responses",
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent",
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${apiKey}`
+          "x-goog-api-key": apiKey
         },
         body: JSON.stringify({
-          model: "gpt-4.1-mini",
-          instructions:
-            "Kamu adalah Astra, AI assistant yang ramah, jelas, dan membantu. Jawab dalam bahasa yang digunakan pengguna.",
-          input: message
+          system_instruction: {
+            parts: [{
+              text: "Kamu adalah Astra, AI assistant yang ramah, cerdas, jelas, dan membantu. Jawab menggunakan bahasa pengguna."
+            }]
+          },
+          contents: [{
+            role: "user",
+            parts: [{ text: message }]
+          }]
         })
       }
     );
@@ -48,21 +53,25 @@ export default async (req) => {
     if (!response.ok) {
       return new Response(
         JSON.stringify({
-          error: data.error?.message || "Gagal menghubungi AI."
+          error: data.error?.message || "Gemini gagal merespons."
         }),
         { status: response.status }
       );
     }
 
+    const reply =
+      data.candidates?.[0]?.content?.parts
+        ?.map(part => part.text || "")
+        .join("") || "Astra belum mendapatkan jawaban.";
+
     return new Response(
-      JSON.stringify({
-        reply: data.output_text || "Maaf, belum ada jawaban."
-      }),
+      JSON.stringify({ reply }),
       {
         status: 200,
         headers: { "Content-Type": "application/json" }
       }
     );
+
   } catch (error) {
     return new Response(
       JSON.stringify({ error: "Terjadi kesalahan pada server." }),
