@@ -1,0 +1,144 @@
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: #fff;
+    color: #252525;
+    font-family: Arial, Helvetica, sans-serif;
+    min-height: 100vh;
+}
+
+.topbar {
+    height: 65px;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #eee;
+}
+
+.brand {
+    font-size: 21px;
+    font-weight: 700;
+    letter-spacing: -0.8px;
+}
+
+button {
+    cursor: pointer;
+    border: 0;
+    font: inherit;
+}
+
+#newChat {
+    background: #f3f3f3;
+    padding: 10px 15px;
+    border-radius: 8px;
+    color: #333;
+}
+
+.chat-container {
+    width: min(760px, 100%);
+    min-height: calc(100vh - 65px);
+    margin: auto;
+    padding: 35px 20px 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.welcome {
+    margin: auto 0;
+    text-align: center;
+}
+
+.welcome h1 {
+    font-size: clamp(25px, 5vw, 34px);
+    font-weight: 600;
+    letter-spacing: -1.2px;
+    margin-bottom: 10px;
+}
+
+.welcome p {
+    color: #777;
+    font-size: 15px;
+}
+
+.messages {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding-bottom: 25px;
+}
+
+.chat-form {
+    margin-top: auto;
+    border: 1px solid #dedede;
+    border-radius: 16px;
+    padding: 13px;
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    box-shadow: 0 3px 12px #00000008;
+}
+
+.chat-form textarea {
+    flex: 1;
+    border: 0;
+    outline: none;
+    resize: none;
+    font: inherit;
+    font-size: 15px;
+    min-height: 40px;
+    max-height: 150px;
+    padding: 10px 5px;
+}
+
+#sendButton {
+    background: #222;
+    color: white;
+    padding: 11px 17px;
+    border-radius: 10px;
+}
+
+footer {
+    color: #999;
+    text-align: center;
+    font-size: 11px;
+    padding: 15px 0 5px;
+}
+
+.message {
+    padding: 14px 17px;
+    border-radius: 13px;
+    line-height: 1.6;
+    font-size: 15px;
+    max-width: 90%;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.message.user {
+    background: #f1f1f1;
+    align-self: flex-end;
+}
+
+.message.assistant {
+    background: #fff;
+    align-self: flex-start;
+}
+
+@media (max-width: 600px) {
+    .topbar {
+        padding: 0 16px;
+    }
+
+    .chat-container {
+        padding: 25px 15px 15px;
+    }
+
+    .welcome h1 {
+        font-size: 27px;
+    }
+}
